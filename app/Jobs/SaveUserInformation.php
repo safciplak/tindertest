@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\InstagramPhotos;
+use App\School;
 use App\User;
 use App\UserImages;
 use Illuminate\Bus\Queueable;
@@ -31,30 +33,70 @@ class SaveUserInformation implements ShouldQueue
      */
     public function handle()
     {
-        $fbUserId = 10152410516074925;
-        $fbToken = 'EAAGm0PX4ZCpsBABCpU2GHrAQpZBwBRrWGfl1aB7nMjdZCcbqWlYTuUNmLDfYLgc09PI3RxZAPjkKhfzSdUYWd9rcnAkGL3k47ZCZBUKrI3rpzNpbWbTJP6IG22KWUZAt4d8hNJtEZAZAzM8C7D71YyXMnbQiZBQ8Fa4SylbAZAoM0Vq4AZBw5TkbSCzrXjbTZB5MsbqmgzzPa48EWZChDRhLGydEdEohMDlfZCYZAb9Iyve0zvsslGeIHla6V0ivxBaMCEQt61gZD';
+        $fbUserId = 100025789967080;
+        $fbToken = 'EAAGm0PX4ZCpsBAL3IDmjWeN84zSjmOdSzw4Y6c1xMKbEqk67ZA8rJVs2zkbIme4O6fKIH4zMZBWe6EtF6bQCZBSxfxv24o2QMYPuKAysjVhEhKFUlwe9qUFN9cDzKJCiP5uEdivhuGKeKcC0S0AmdZCk4DT2OJCnNQn6A0WYMJwsrWPin5xC4JOzkXxEIhIr6ELDxzTMKsMcWII4fAM1P7V146Riuevf6zQe3K0wYqgDDW9U59qaWD90F0cGk1zTPrh5lGZC5JiwZDZD';
+
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
-        $tinder->updateLocation(41.060084,28.9793561);
+        $lat = 41.060084;
+        $lng = 28.9793561;
+        $tinder->updateLocation($lat, $lng);
 
         $x = $tinder->recommendations();
 
-        if ($x->status != 200){
+        if ($x->status != 200) {
             dd('accessToken');
         }
 
         if ($x->status == 200)
             foreach ($x->results as $item) {
+
+
                 $userId = $item->_id;
                 $bio = $item->bio;
                 $name = $item->name;
+                $birthDate = $item->birth_date;
+                $distanceMile = $item->distance_mi;
 
-                dump($item);
+                $birthDate = explode("T", $birthDate);
+                $birthDate = explode("-", reset($birthDate));
+                $age = date('Y') - reset($birthDate);
 
+                if (!empty($item->schools)) {
+                    $school = reset($item->schools);
+                    $schoolId = $school->id ?? null;
+                    $schoolName = $school->name;
+
+                    School::updateOrCreate([
+                        'school_id' => $schoolId,
+                        'name' => $schoolName,
+                    ], ['school_id' => $schoolId]);
+                }
+
+                $instagram = null;
+                if (isset($item->instagram)) {
+                    $instagram = $item->instagram->username;
+                    $instagramImageCount = $item->instagram->media_count;
+
+                    foreach ($item->instagram->photos as $photo) {
+                        InstagramPhotos::create([
+                            'image' => $photo->image,
+                            'thumbnail' => $photo->thumbnail
+                        ]);
+                    }
+                }
 
                 $user = User::create([
                     'user_id' => $userId,
                     'bio' => $bio,
                     'name' => $name,
+                    'instagram' => $instagram,
+                    'instagram_image_count' => $instagramImageCount ?? null,
+                    'age' => $age,
+                    'distance_mile' => $distanceMile,
+                    'school_id' => $schoolId ?? null,
+                    'facebook_id' => $fbUserId ?? null,
+                    'lat' => $lat,
+                    'lng' => $lng,
                 ]);
 
                 foreach ($item->photos as $photo) {
