@@ -16,10 +16,11 @@ Route::get('/', function () {
 });
 
 Route::get('/', 'TestController@index');
-Route::get('/show', 'TestController@show');
+Route::get('show', 'TestController@show');
+Route::get('like', 'TestController@like');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->name('home');
 
 
 // OAuth Routes

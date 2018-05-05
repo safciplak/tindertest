@@ -1,31 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Jobs;
 
-use App\InstagramPhotos;
-use App\Jobs\LikeUser;
-use App\Jobs\SaveUserInformation;
-use App\School;
 use App\User;
-use App\UserImages;
 use App\UserLikes;
-use Illuminate\Http\Request;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
-class TestController extends Controller
+class LikeUser implements ShouldQueue
 {
-    public function index()
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        SaveUserInformation::dispatch();
+        //
     }
 
-    public function show()
-    {
-        $images = UserImages::all();
-
-        return view('welcome', compact('images'));
-    }
-
-    public function like()
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
     {
         $fbUserId = env('FB_USERID');
         $fbToken = env('FB_ACCESS_TOKEN');
@@ -41,6 +45,7 @@ class TestController extends Controller
                 $userId = $user->user_id;
             }
             $x = $tinder->like($userId);
+            sleep(4);
 
 
             UserLikes::updateOrCreate([
@@ -48,6 +53,5 @@ class TestController extends Controller
             ], []);
         }
 
-//        LikeUser::dispatch();
     }
 }

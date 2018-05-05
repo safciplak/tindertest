@@ -33,8 +33,8 @@ class SaveUserInformation implements ShouldQueue
      */
     public function handle()
     {
-        $fbUserId = 100025789967080;
-        $fbToken = 'EAAGm0PX4ZCpsBAL3IDmjWeN84zSjmOdSzw4Y6c1xMKbEqk67ZA8rJVs2zkbIme4O6fKIH4zMZBWe6EtF6bQCZBSxfxv24o2QMYPuKAysjVhEhKFUlwe9qUFN9cDzKJCiP5uEdivhuGKeKcC0S0AmdZCk4DT2OJCnNQn6A0WYMJwsrWPin5xC4JOzkXxEIhIr6ELDxzTMKsMcWII4fAM1P7V146Riuevf6zQe3K0wYqgDDW9U59qaWD90F0cGk1zTPrh5lGZC5JiwZDZD';
+        $fbUserId = env('FB_USERID');
+        $fbToken = env('FB_ACCESS_TOKEN');
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
         $lat = 41.060084;
