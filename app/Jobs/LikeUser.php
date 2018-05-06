@@ -2,8 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Setting;
 use App\User;
 use App\UserLikes;
+use App\UserUnLikes;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,26 +33,41 @@ class LikeUser implements ShouldQueue
      */
     public function handle()
     {
+
+
         $fbUserId = env('FB_USERID');
         $fbToken = env('FB_ACCESS_TOKEN');
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
-        $users = User::skip(UserLikes::count())->limit(10)->get();
+
+        $users = User::with('userImages')
+            ->where('id', '>', Setting::where('key', 'last_user_id')->value('value'))
+            ->limit(10)->get();
         foreach ($users as $user) {
             $userId = $user->user_id;
-            $existUserLike = User::where('user_id', $userId)->first();
-            if(!empty($existUserLike)){
-                $user = User::inRandomOrder()->first();
-                $userId = $user->user_id;
+//            $existUserLike = User::where('user_id', $userId)->first();
+//            if (!empty($existUserLike)) {
+//                $user = User::with('userImages')->whereNotNull('instagram')->inRandomOrder()->first();
+//                $userId = $user->user_id;
+//            }
+
+            if ($user->userImages->count() > 1 || isset($user->instagram)) {
+                $tinder->like($userId);
+                UserLikes::updateOrCreate([
+                    'user_id' => $userId
+                ], []);
+            } else {
+                $tinder->pass($userId);
+                UserUnLikes::updateOrCreate([
+                    'user_id' => $userId
+                ], []);
             }
-            $x = $tinder->like($userId);
-            sleep(4);
 
-
-            UserLikes::updateOrCreate([
-                'user_id' => $userId
-            ], []);
+            Setting::where('key', 'last_user_id')
+                ->update([
+                    'value' => $user->id
+                ]);
         }
 
     }

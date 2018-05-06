@@ -39,6 +39,13 @@ class SaveUserInformation implements ShouldQueue
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
         $lat = 41.060084;
         $lng = 28.9793561;
+
+        $city = app('geocoder')->reverse($lat, $lng)->get();
+
+        $city = end($city);
+        $city = end($city);
+        $city = $city->getFormattedAddress();
+
         $tinder->updateLocation($lat, $lng);
 
         $x = $tinder->recommendations();
@@ -49,8 +56,6 @@ class SaveUserInformation implements ShouldQueue
 
         if ($x->status == 200)
             foreach ($x->results as $item) {
-
-
                 $userId = $item->_id;
                 $bio = $item->bio;
                 $name = $item->name;
@@ -85,7 +90,7 @@ class SaveUserInformation implements ShouldQueue
                     }
                 }
 
-                $user = User::create([
+                $user = User::updateOrCreate([
                     'user_id' => $userId,
                     'bio' => $bio,
                     'name' => $name,
@@ -97,7 +102,8 @@ class SaveUserInformation implements ShouldQueue
                     'facebook_id' => $fbUserId ?? null,
                     'lat' => $lat,
                     'lng' => $lng,
-                ]);
+                    'city' => $city
+                ], []);
 
                 foreach ($item->photos as $photo) {
                     $photoUrl = $photo->url;

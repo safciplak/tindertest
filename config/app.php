@@ -161,6 +161,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Geocoder\Laravel\Providers\GeocoderService::class,
+
 
 
     ],

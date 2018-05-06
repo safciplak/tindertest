@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\InstagramPhotos;
 use App\Jobs\LikeUser;
 use App\Jobs\SaveUserInformation;
+use App\Jobs\UnlikeUser;
 use App\School;
+use App\Setting;
 use App\User;
 use App\UserImages;
 use App\UserLikes;
+use App\UserUnLikes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
@@ -27,27 +31,11 @@ class TestController extends Controller
 
     public function like()
     {
-        $fbUserId = env('FB_USERID');
-        $fbToken = env('FB_ACCESS_TOKEN');
+        LikeUser::dispatch();
+    }
 
-        $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
-
-        $users = User::skip(UserLikes::count())->limit(10)->get();
-        foreach ($users as $user) {
-            $userId = $user->user_id;
-            $existUserLike = User::where('user_id', $userId)->first();
-            if(!empty($existUserLike)){
-                $user = User::inRandomOrder()->first();
-                $userId = $user->user_id;
-            }
-            $x = $tinder->like($userId);
-
-
-            UserLikes::updateOrCreate([
-                'user_id' => $userId
-            ], []);
-        }
-
-//        LikeUser::dispatch();
+    public function unlike()
+    {
+        UnLikeUser::dispatch();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\LikeUser;
 use App\Jobs\SaveUserInformation;
+use App\Jobs\UnlikeUser;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
 
 //        $schedule->job(new SaveUserInformation)->everyMinute();
         $schedule->job(new LikeUser())->everyMinute();
+//        $schedule->job(new UnlikeUser())->everyMinute();
 
 
     }

@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::get('/', 'TestController@index');
 Route::get('show', 'TestController@show');
 Route::get('like', 'TestController@like');
+Route::get('unlike', 'TestController@unlike');
 Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
