@@ -6,14 +6,11 @@ use App\InstagramPhotos;
 use App\Jobs\LikeUser;
 use App\Jobs\SaveUserInformation;
 use App\Jobs\UnlikeUser;
-use App\School;
 use App\Setting;
 use App\User;
 use App\UserImages;
 use App\UserLikes;
 use App\UserUnLikes;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {

@@ -34,7 +34,6 @@ class LikeUser implements ShouldQueue
     public function handle()
     {
 
-
         $fbUserId = env('FB_USERID');
         $fbToken = env('FB_ACCESS_TOKEN');
 
@@ -52,11 +51,29 @@ class LikeUser implements ShouldQueue
 //                $userId = $user->user_id;
 //            }
 
+//            $userId = '5aec30598212bfdb6c2da6dc'; // ahmet
+//            $userId = '56c184752311a9ee6e827894'; // safak
             if ($user->userImages->count() > 1 || isset($user->instagram)) {
-                $tinder->like($userId);
+                $likeResult = $tinder->like($userId);
+
+                if(isset($likeResult->status)){
+                    if($likeResult->status != 200){
+                        dd($likeResult->status);
+                    }
+                }
+
+                if(isset($likeResult->match)){
+                    if($likeResult->match != false){
+                        \App\Match::updateOrCreate([
+                            'user_id' => $userId
+                        ]);
+                    }
+                }
+
                 UserLikes::updateOrCreate([
                     'user_id' => $userId
                 ], []);
+
             } else {
                 $tinder->pass($userId);
                 UserUnLikes::updateOrCreate([
