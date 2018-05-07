@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get('/', 'TestController@index');
+Route::get('/', 'TestController@index');
 Route::get('show', 'TestController@show');
 Route::get('like', 'TestController@like');
 Route::get('unlike', 'TestController@unlike');

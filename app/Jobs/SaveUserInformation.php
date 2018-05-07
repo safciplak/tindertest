@@ -41,8 +41,19 @@ class SaveUserInformation implements ShouldQueue
 //        $fbToken = $member->token;
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
-        $lat = 41.060084;
-        $lng = 28.9793561;
+        $coordinates = [
+            [41.060084,28.9793561],
+            [40.9832818,29.0211453],
+            [41.0371106,28.9150514],
+            [41.0076428,29.0267559],
+            [41.0859612,29.0381294],
+            [41.0454028,28.9990235]
+        ];
+
+        $rand = rand(0, count($coordinates)-1);
+        $coordinate = $coordinates[$rand];
+        $lat = $coordinate[0];
+        $lng = $coordinate[1];
 
         $city = app('geocoder')->reverse($lat, $lng)->get();
 
