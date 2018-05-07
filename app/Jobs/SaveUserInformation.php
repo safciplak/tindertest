@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\InstagramPhotos;
+use App\Member;
 use App\School;
 use App\User;
 use App\UserImages;
@@ -33,8 +34,11 @@ class SaveUserInformation implements ShouldQueue
      */
     public function handle()
     {
+        $member = Member::find(1);
         $fbUserId = env('FB_USERID');
+//        $fbUserId = $member->provider_id;
         $fbToken = env('FB_ACCESS_TOKEN');
+//        $fbToken = $member->token;
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
         $lat = 41.060084;

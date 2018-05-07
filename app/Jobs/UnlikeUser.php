@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Member;
 use App\User;
 use App\UserLikes;
 use App\UserUnLikes;
@@ -32,8 +33,9 @@ class UnlikeUser implements ShouldQueue
      */
     public function handle()
     {
-        $fbUserId = env('FB_USERID');
-        $fbToken = env('FB_ACCESS_TOKEN');
+        $member = Member::find(1);
+        $fbUserId = $member->provider_id;
+        $fbToken = $member->token;
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 

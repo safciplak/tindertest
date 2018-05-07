@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Member;
 use Laravel\Socialite\Facades\Socialite;
+use Socialize;
 
 class AuthController extends Controller
 {
@@ -28,11 +29,14 @@ class AuthController extends Controller
      */
     public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver($provider)->user();
+
+        $user = Socialite::driver($provider)->stateless()->user();
 
         $authUser = $this->findOrCreateUser($user, $provider);
+
+        dd($user);
 //        Auth::login($authUser, true);
-        return redirect($this->redirectTo);
+//        return redirect($this->redirectTo);
     }
 
     /**
@@ -48,12 +52,14 @@ class AuthController extends Controller
         if ($authUser) {
             return $authUser;
         }
-        return Member::create([
+
+        return Member::updateOrCreate([
             'name'     => $user->name,
+            'token'    => $user->token,
             'email'    => $user->email,
-            'gender'    => $user->gender,
+            'gender'    => $user->gender ?? null,
             'provider' => $provider,
             'provider_id' => $user->id
-        ]);
+        ], []);
     }
 }

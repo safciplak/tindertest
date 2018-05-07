@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Member;
 use App\Setting;
 use App\User;
 use App\UserLikes;
@@ -34,8 +35,12 @@ class LikeUser implements ShouldQueue
     public function handle()
     {
 
+        $member = Member::find(1);
         $fbUserId = env('FB_USERID');
+//        $fbUserId = $member->provider_id;
         $fbToken = env('FB_ACCESS_TOKEN');
+//        $fbToken = $member->token;
+
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
@@ -53,17 +58,21 @@ class LikeUser implements ShouldQueue
 
 //            $userId = '5aec30598212bfdb6c2da6dc'; // ahmet
 //            $userId = '56c184752311a9ee6e827894'; // safak
-            if ($user->userImages->count() > 1 || isset($user->instagram)) {
+
+            $likeUnlikeArray = [false, true];
+            $select = rand(0, 1);
+
+            if ($likeUnlikeArray[$select]) {
                 $likeResult = $tinder->like($userId);
 
-                if(isset($likeResult->status)){
-                    if($likeResult->status != 200){
+                if (isset($likeResult->status)) {
+                    if ($likeResult->status != 200) {
                         dd($likeResult->status);
                     }
                 }
 
-                if(isset($likeResult->match)){
-                    if($likeResult->match != false){
+                if (isset($likeResult->match)) {
+                    if ($likeResult->match != false) {
                         \App\Match::updateOrCreate([
                             'user_id' => $userId
                         ]);
@@ -73,13 +82,13 @@ class LikeUser implements ShouldQueue
                 UserLikes::updateOrCreate([
                     'user_id' => $userId
                 ], []);
-
             } else {
                 $tinder->pass($userId);
                 UserUnLikes::updateOrCreate([
                     'user_id' => $userId
                 ], []);
             }
+
 
             Setting::where('key', 'last_user_id')
                 ->update([

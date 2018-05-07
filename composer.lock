@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ecb379929f5e742260ffc5134b25b040",
-    "content-hash": "8c985301ded682e5aa94f2cf6e297b2d",
+    "hash": "90f6bf24be2f4ebdf1ef55f1114e60f7",
+    "content-hash": "4cbb3610405c16a0a63796bdc7b45bb4",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -968,16 +968,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.6.19",
+            "version": "v5.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4e480de7fe51c52573a95b25ebf85f5c7f5d2087"
+                "reference": "3c11e7acc6ad14dd86e2f9e4bf3230010c3e611c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4e480de7fe51c52573a95b25ebf85f5c7f5d2087",
-                "reference": "4e480de7fe51c52573a95b25ebf85f5c7f5d2087",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3c11e7acc6ad14dd86e2f9e4bf3230010c3e611c",
+                "reference": "3c11e7acc6ad14dd86e2f9e4bf3230010c3e611c",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1103,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-04-30 17:43:38"
+            "time": "2018-05-02 15:22:18"
         },
         {
             "name": "laravel/socialite",

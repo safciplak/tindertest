@@ -17,9 +17,14 @@ class CreateMembersTable extends Migration
             $table->increments('id');
             $table->string('name')->nullable();
             $table->string('email')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('token')->nullable();
             $table->string('provider');
             $table->string('provider_id');
             $table->timestamps();
+
+
+
         });
     }
 
