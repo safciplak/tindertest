@@ -39,7 +39,8 @@ class UnlikeUser implements ShouldQueue
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
-        $users = User::skip(UserLikes::count()+UserUnLikes::count())->limit(10)->get();
+
+        $users = User::skip(UserLikes::count()+UserUnLikes::count())->limit(1)->get();
         foreach ($users as $user) {
             $userId = $user->user_id;
             $existUserLike = User::where('user_id', $userId)->first();
@@ -48,7 +49,6 @@ class UnlikeUser implements ShouldQueue
                 $userId = $user->user_id;
             }
             $x = $tinder->pass($userId);
-//            sleep(4);
 
 
             UserUnLikes::updateOrCreate([

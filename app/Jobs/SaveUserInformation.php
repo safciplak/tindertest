@@ -42,12 +42,16 @@ class SaveUserInformation implements ShouldQueue
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
         $coordinates = [
-            [41.060084,28.9793561],
-            [40.9832818,29.0211453],
-            [41.0371106,28.9150514],
-            [41.0076428,29.0267559],
-            [41.0859612,29.0381294],
-            [41.0454028,28.9990235]
+//            [41.060084,28.9793561],
+//            [40.9832818,29.0211453],
+//            [41.0371106,28.9150514],
+//            [41.0076428,29.0267559],
+//            [41.0859612,29.0381294],
+//            [41.0454028,28.9990235],
+//            [46.460123,30.571703], // odessa
+//            [47.4414941,30.6223387], // dinipro
+            [47.4414941,30.6223387], //kiev
+//            [38.4178607,26.9396314], //izmir istanbul
         ];
 
         $rand = rand(0, count($coordinates)-1);
@@ -55,13 +59,14 @@ class SaveUserInformation implements ShouldQueue
         $lat = $coordinate[0];
         $lng = $coordinate[1];
 
+        $tinder->updateLocation($lat, $lng);
+
+
         $city = app('geocoder')->reverse($lat, $lng)->get();
 
         $city = end($city);
         $city = end($city);
         $city = $city->getFormattedAddress();
-
-        $tinder->updateLocation($lat, $lng);
 
         $x = $tinder->recommendations();
 

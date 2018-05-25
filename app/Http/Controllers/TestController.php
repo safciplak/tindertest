@@ -29,6 +29,21 @@ class TestController extends Controller
 
     public function like()
     {
+//        $member = Member::find(1);
+//        $fbUserId = env('FB_USERID');
+////        $fbUserId = $member->provider_id;
+//        $fbToken = env('FB_ACCESS_TOKEN');
+////        $fbToken = $member->token;
+//
+//        $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
+//
+//        $x = $tinder->recommendations();
+//
+//
+//        dd($x);
+
+        
+
         LikeUser::dispatch();
     }
 

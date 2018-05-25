@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Match;
 use App\Member;
 use App\Setting;
 use App\User;
@@ -45,11 +46,15 @@ class LikeUser implements ShouldQueue
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
 
+
         $users = User::with('userImages')
             ->where('id', '>', Setting::where('key', 'last_user_id')->value('value'))
             ->limit(10)->get();
         foreach ($users as $user) {
             $userId = $user->user_id;
+            if(isset($user->lat) && isset($user->lng)){
+                $tinder->updateLocation($user->lat, $user->lng);
+            }
 //            $existUserLike = User::where('user_id', $userId)->first();
 //            if (!empty($existUserLike)) {
 //                $user = User::with('userImages')->whereNotNull('instagram')->inRandomOrder()->first();
@@ -73,9 +78,9 @@ class LikeUser implements ShouldQueue
 
                 if (isset($likeResult->match)) {
                     if ($likeResult->match != false) {
-                        \App\Match::updateOrCreate([
+                        Match::updateOrCreate([
                             'user_id' => $userId
-                        ]);
+                        ],[]);
                     }
                 }
 
