@@ -20,6 +20,11 @@ class CreateUsersTable extends Migration
             $table->text('bio')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('password')->nullable();
+            $table->string('instagram_image_count')->nullable();
+            $table->string('school_id')->nullable();
+            $table->string('facebook_id')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
