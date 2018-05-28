@@ -49,7 +49,7 @@ class LikeUser implements ShouldQueue
 
         $users = User::with('userImages')
             ->where('id', '>', Setting::where('key', 'last_user_id')->value('value'))
-            ->limit(10)->get();
+            ->limit(30)->get();
         foreach ($users as $user) {
             $userId = $user->user_id;
             if(isset($user->lat) && isset($user->lng)){
@@ -64,10 +64,10 @@ class LikeUser implements ShouldQueue
 //            $userId = '5aec30598212bfdb6c2da6dc'; // ahmet
 //            $userId = '56c184752311a9ee6e827894'; // safak
 
-            $likeUnlikeArray = [false, true];
-            $select = rand(0, 1);
-
-            if ($likeUnlikeArray[$select]) {
+//            $likeUnlikeArray = [false, true];
+//            $select = rand(0, 1);
+//
+//            if ($likeUnlikeArray[$select]) {
                 $likeResult = $tinder->like($userId);
 
                 if (isset($likeResult->status)) {
@@ -87,12 +87,12 @@ class LikeUser implements ShouldQueue
                 UserLikes::updateOrCreate([
                     'user_id' => $userId
                 ], []);
-            } else {
-                $tinder->pass($userId);
-                UserUnLikes::updateOrCreate([
-                    'user_id' => $userId
-                ], []);
-            }
+//            } else {
+//                $tinder->pass($userId);
+//                UserUnLikes::updateOrCreate([
+//                    'user_id' => $userId
+//                ], []);
+//            }
 
 
             Setting::where('key', 'last_user_id')
