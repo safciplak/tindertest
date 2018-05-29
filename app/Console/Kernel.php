@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
 //        $schedule->job(new RemoveUnlikeUsers())->everyMinute();
-//        $schedule->job(new SaveUserInformation())->everyMinute();
+        $schedule->job(new SaveUserInformation())->everyMinute();
         $schedule->job(new LikeUser())->everyMinute ();
 
 
