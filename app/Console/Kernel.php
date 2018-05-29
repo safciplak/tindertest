@@ -31,8 +31,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-//        $schedule->job(new RemoveUnlikeUsers())->everyMinute();
-//        $schedule->job(new SaveUserInformation())->everyMinute();
+        $schedule->job(new RemoveUnlikeUsers())->everyMinute();
+        $schedule->job(new SaveUserInformation())->everyMinute();
         $schedule->job(new LikeUser())->everyMinute ();
 
 
