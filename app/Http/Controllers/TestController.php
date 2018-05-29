@@ -18,31 +18,44 @@ class TestController extends Controller
 {
     public function index()
     {
-        SaveUserInformation::dispatch();
+//        SaveUserInformation::dispatch();
     }
 
     public function show()
     {
 
+        $member = Member::find(1);
         $fbUserId = env('FB_USERID');
+//        $fbUserId = $member->provider_id;
         $fbToken = env('FB_ACCESS_TOKEN');
+//        $fbToken = $member->token;
 
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
 
-
-
-        $users = UserUnLikes::with('user')
-            ->where('id', '>', Setting::where('key', 'remove_user_id')->value('value'))
+        $users = User::where('id', '>', Setting::where('key', 'last_user_id')->value('value'))
             ->limit(30)->get();
+
 
         foreach ($users as $user) {
             $userId = $user->user_id;
-            if(isset($user->user->lat) && isset($user->user->lng)){
-                $tinder->updateLocation($user->user->lat, $user->user->lng);
+            if(isset($user->lat) && isset($user->lng)){
+                $tinder->updateLocation($user->lat, $user->lng);
             }
+//            $existUserLike = User::where('user_id', $userId)->first();
+//            if (!empty($existUserLike)) {
+//                $user = User::with('userImages')->whereNotNull('instagram')->inRandomOrder()->first();
+//                $userId = $user->user_id;
+//            }
 
+//            $userId = '5aec30598212bfdb6c2da6dc'; // ahmet
+//            $userId = '56c184752311a9ee6e827894'; // safak
+
+//            $likeUnlikeArray = [false, true];
+//            $select = rand(0, 1);
+//
+//            if ($likeUnlikeArray[$select]) {
             $likeResult = $tinder->like($userId);
 
             if (isset($likeResult->status)) {
@@ -70,14 +83,11 @@ class TestController extends Controller
 //            }
 
 
-            Setting::where('key', 'remove_user_id')
+            Setting::where('key', 'last_user_id')
                 ->update([
                     'value' => $user->id
                 ]);
-
-            UserUnLikes::destroy(Setting::where('key', 'remove_user_id')->value('value'));
         }
-
 
 
         $images = UserImages::all();

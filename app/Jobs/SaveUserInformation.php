@@ -34,11 +34,8 @@ class SaveUserInformation implements ShouldQueue
      */
     public function handle()
     {
-        $member = Member::find(1);
         $fbUserId = env('FB_USERID');
-//        $fbUserId = $member->provider_id;
         $fbToken = env('FB_ACCESS_TOKEN');
-//        $fbToken = $member->token;
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
         $coordinates = [

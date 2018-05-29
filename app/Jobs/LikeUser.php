@@ -36,20 +36,16 @@ class LikeUser implements ShouldQueue
     public function handle()
     {
 
-        $member = Member::find(1);
         $fbUserId = env('FB_USERID');
-//        $fbUserId = $member->provider_id;
         $fbToken = env('FB_ACCESS_TOKEN');
-//        $fbToken = $member->token;
-
 
         $tinder = new \Pecee\Http\Service\Tinder($fbUserId, $fbToken);
 
-
-
         $users = User::with('userImages')
-            ->where('id', '>', Setting::where('key', 'last_user_id')->value('value'))
+            ->where('id', '>', Setting::where('key', 'mustafa_last_user_id')->value('value'))
             ->limit(30)->get();
+
+
         foreach ($users as $user) {
             $userId = $user->user_id;
             if(isset($user->lat) && isset($user->lng)){
@@ -95,7 +91,7 @@ class LikeUser implements ShouldQueue
 //            }
 
 
-            Setting::where('key', 'last_user_id')
+            Setting::where('key', 'mustafa_last_user_id')
                 ->update([
                     'value' => $user->id
                 ]);
